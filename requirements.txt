@@ -3,3 +3,4 @@ confluent_kafka
 ccxt
 websocket-client-py3
 krakenex
+btfxwss

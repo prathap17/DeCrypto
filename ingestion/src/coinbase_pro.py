@@ -5,7 +5,7 @@ import cbpro
 from confluent_kafka import Producer
 from config.config import KAFKA_NODES
 
-print(KAFKA_NODES)
+#print(KAFKA_NODES)
 
 
 class CoinbasePro(cbpro.WebsocketClient):
@@ -14,11 +14,14 @@ class CoinbasePro(cbpro.WebsocketClient):
         self.products = ["BTC-USD", "ETH-USD", "LTC-USD",
                          "BCH-USD"]  # coinbase supports four coins
         self.type = 'ticker'
-        self.producer = Producer({'bootstrap.servers': ','.join(KAFKA_NODES)})
+        self.producer = Producer({'bootstrap.servers': 'ec2-35-171-13-71.compute-1.amazonaws.com:9092', 'default.topic.config': { 'request.required.acks': 'all' }})
         print('Established Socket Connection')
+        
 
     def on_message(self, msg):
+        
         def delivery_report(err, k_msg):
+            
             """ Called once for each message produced to indicate delivery result.
                 Triggered by poll() or flush(). """
             if err is not None:
@@ -27,19 +30,20 @@ class CoinbasePro(cbpro.WebsocketClient):
                 print(('Message delivered to {} [{}] - {}'.format(
                     k_msg.topic(), k_msg.partition(), msg['product_id'])))
 
-            if 'time' in msg:  # timestamp
-                asset_pair = msg['product_id']
-                timestamp = dateutil.parser.parse(msg['time']).timestamp()
-                data = [
+        if 'time' in msg:  # timestamp
+            asset_pair = msg['product_id']
+            timestamp = dateutil.parser.parse(msg['time']).timestamp()
+            data = [
                     timestamp, msg['best_bid'], msg['best_ask'], asset_pair,
                     asset_pair
                 ]
-                message = json.dumps(data)
+            message = json.dumps(data)
+            print(message)
 
                 # feed to kafka
-                topic = 'Coinbase'
-                self.producer.poll(0)
-                self.producer.produce(
+            topic = 'Coinbase'
+            self.producer.poll(0)
+            self.producer.produce(
                     topic,
                     message.encode('utf-8'),
                     key=asset_pair,
