@@ -14,7 +14,7 @@ class CoinbasePro(cbpro.WebsocketClient):
         self.products = ["BTC-USD", "ETH-USD", "LTC-USD",
                          "BCH-USD"]  # coinbase supports four coins
         self.type = 'ticker'
-        self.producer = Producer({'bootstrap.servers': 'ec2-35-171-13-71.compute-1.amazonaws.com:9092', 'default.topic.config': { 'request.required.acks': 'all' }})
+        self.producer = Producer({'bootstrap.servers': ':9092', 'default.topic.config': { 'request.required.acks': 'all' }})
         print('Established Socket Connection')
         
 
