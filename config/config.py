@@ -1,2 +1,1 @@
-KAFKA_NODES = ['ec2-35-171-13-71.compute-1.amazonaws.com:9092', 'ec2-52-22-89-129.compute-1.amazonaws.com:9092',
-               'ec2-52-55-223-183.compute-1.amazonaws.com:9092', 'ec2-52-5-113-106.compute-1.amazonaws.com:9092']
+KAFKA_NODES = []
