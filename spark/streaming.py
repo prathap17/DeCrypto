@@ -10,7 +10,7 @@ KAFKA_NODES = ['ec2-54-84-42-80.compute-1.amazonaws.com:9092', 'ec2-18-211-13-85
 
 def pp(partition):
     for msg in partition:
-        print('data', msg )
+        print('this is data', msg)
 class SparkStreamConsumer :
     def __init__(self, slide_interval=5, window_length=15):
         self.sc = SparkContext(appName='SparkStream', master='spark://ec2-54-84-42-80.compute-1.amazonaws.com:7077')
@@ -29,6 +29,6 @@ class SparkStreamConsumer :
         parsed = self.kvs.window(self.window_length, self.slide_interval).map(lambda v: json.loads(v[1])).cache()
 
         #print(parsed)
-        parsed.pprint()
+        #parsed.pprint()
 
         parsed.foreachRDD(lambda rdd: rdd.foreachPartition(pp))
