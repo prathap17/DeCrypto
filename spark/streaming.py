@@ -29,6 +29,6 @@ class SparkStreamConsumer :
         parsed = self.kvs.window(self.window_length, self.slide_interval).map(lambda v: json.loads(v[1])).cache()
 
         #print(parsed)
-        parsed.print()
+        parsed.pprint()
 
         parsed.foreachRDD(lambda rdd: rdd.foreachPartition(pp))
