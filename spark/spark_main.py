@@ -14,5 +14,5 @@ if __name__ == '__main__':
     print(spread_topics)
 
     consumer = SparkStreamConsumer()
-    consumer.consume_spreads('Coinbase')
+    consumer.consume_spreads(['Coinbase'])
     consumer.start_stream()
