@@ -26,9 +26,11 @@ class SparkStreamConsumer :
         self.kvs = KafkaUtils.createDirectStream(self.ssc, spread_topics,
                                                  {'metadata.broker.list': ','.join(KAFKA_NODES)})
         # messages come in [timestamp, bid, ask] format
-        parsed = self.kvs.window(self.window_length, self.slide_interval).map(lambda v: json.loads(v[1])).cache()
+        lines = self.kvs.map(lambda v: json.loads(v[1])).cache()
+        print(lines)
+        #parsed = self.kvs.window(self.window_length, self.slide_interval).map(lambda v: json.loads(v[1])).cache()
 
-        #print(parsed)
+        
         #parsed.pprint()
 
-        parsed.foreachRDD(lambda rdd: rdd.foreachPartition(print_partition))
+        #parsed.foreachRDD(lambda rdd: rdd.foreachPartition(print_partition))
