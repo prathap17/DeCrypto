@@ -29,6 +29,6 @@ class SparkStreamConsumer:
         # messages come in [timestamp, bid, ask] format
         parsed = self.kvs.window(self.window_length, self.slide_interval).map(lambda v: json.loads(v[1])).cache()
 
-        print(parsed)
+        #print(parsed)
 
         parsed.foreachRDD(lambda rdd: rdd.foreachPartition(pp))
