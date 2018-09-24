@@ -10,9 +10,8 @@ KAFKA_NODES = ['ec2-54-84-42-80.compute-1.amazonaws.com:9092', 'ec2-18-211-13-85
 
 def pp(partition):
     for msg in partition:
-        #print(msg)
-
-class SparkStreamConsumer:
+        x =0 
+class SparkStreamConsumer :
     def __init__(self, slide_interval=5, window_length=15):
         self.sc = SparkContext(appName='SparkStream', master='spark://ec2-54-84-42-80.compute-1.amazonaws.com:7077')
         self.ssc = StreamingContext(self.sc, slide_interval)
