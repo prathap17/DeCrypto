@@ -1,7 +1,7 @@
 import dateutil.parser
 import json
 from websocket import create_connection, WebSocketConnectionClosedException
-import cbpro
+import cbpro 
 from confluent_kafka import Producer
 from config.config import KAFKA_NODES
 
@@ -14,7 +14,7 @@ class CoinbasePro(cbpro.WebsocketClient):
         self.products = ["BTC-USD", "ETH-USD", "LTC-USD",
                          "BCH-USD"]  # coinbase supports four coins
         self.type = 'ticker'
-        self.producer = Producer({'bootstrap.servers': 'ec2-35-171-13-71.compute-1.amazonaws.com:9092', 'default.topic.config': { 'request.required.acks': 'all' }})
+        self.producer = Producer({'bootstrap.servers': ','.join(KAFKA_NODES), 'default.topic.config': { 'request.required.acks': 'all' }})
         print('Established Socket Connection')
         
 
@@ -31,6 +31,7 @@ class CoinbasePro(cbpro.WebsocketClient):
                     k_msg.topic(), k_msg.partition(), msg['product_id'])))
 
         if 'time' in msg:  # timestamp
+            
             asset_pair = msg['product_id']
             timestamp = dateutil.parser.parse(msg['time']).timestamp()
             data = [
@@ -38,7 +39,7 @@ class CoinbasePro(cbpro.WebsocketClient):
                     asset_pair
                 ]
             message = json.dumps(data)
-            print(message)
+            #print(message)
 
                 # feed to kafka
             topic = 'Coinbase'
