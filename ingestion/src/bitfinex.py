@@ -5,10 +5,11 @@ import json
 import time
 from threading import Thread
 from websocket import create_connection, WebSocketConnectionClosedException
+from config.config import KAFKA_NODES
 
 
 class BitfinexProducer(object):
-    def __init__(self, products=None, channels="book", producer=None,addr='0.0.0.0', topic="trades"):
+    def __init__(self, products=None, channels="book", producer=None, topic="trades"):
         self.url = "wss://api.bitfinex.com/ws"
         self.products = ['btcusd','ltcusd','bchusd','ethusd']
         self.channels = channels
@@ -16,10 +17,10 @@ class BitfinexProducer(object):
         self.message_count = 0
         self.ws = None
         self.thread = None
-        self.producer = KafkaProducer(bootstrap_servers=addr,
+        self.producer = KafkaProducer(bootstrap_servers=','.join(KAFKA_NODES),
                                       key_serializer=lambda v: v.encode('ascii'),
                                       value_serializer=lambda v: json.dumps(v).encode('ascii'))
-        self.topic = topic
+        
         self.probCount = 0
         self.snapshot = 0
 
@@ -84,13 +85,14 @@ class BitfinexProducer(object):
             fmt_msg = {'price': str(msg[5]),
                         'amount': str(abs(msg[6])),
                         'time': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S+0000")}
-            topic = self.topic + '-' + self.products.lower()
+            topic = self.topic 
+            print(topic)
         
             fmt_msg['market'] = "bitfinex"
 
-            print(topic)
+            
 #            print(msg)
-#            print(fmt_msg)
+            print(fmt_msg)
             self.producer.send(topic, key=topic, value=fmt_msg) #***************
             self.probCount = 0
         except Exception as e:
