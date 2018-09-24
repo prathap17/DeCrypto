@@ -8,7 +8,7 @@ KAFKA_NODES = ['ec2-54-84-42-80.compute-1.amazonaws.com:9092', 'ec2-18-211-13-85
                'ec2-52-0-129-251.compute-1.amazonaws.com:9092', 'ec2-18-215-20-238.compute-1.amazonaws.com:9092']
 
 
-def pp(partition):
+def print_partition(partition):
     for msg in partition:
         print('this is data', msg)
 class SparkStreamConsumer :
@@ -31,4 +31,4 @@ class SparkStreamConsumer :
         #print(parsed)
         #parsed.pprint()
 
-        parsed.foreachRDD(lambda rdd: rdd.foreachPartition(pp))
+        parsed.foreachRDD(lambda rdd: rdd.foreachPartition(print_partition))
