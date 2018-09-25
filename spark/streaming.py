@@ -33,4 +33,4 @@ class SparkStreamConsumer :
         
         #parsed.pprint()
 
-        parsed.foreachRDD(lambda rdd: rdd.foreachPartition(print_partition))
+        parsed.foreachRDD((print_partition))
