@@ -12,25 +12,25 @@ def print_partition(partition):
     for msg in partition:
         print('this is data', msg)
 class SparkStreamConsumer :
-    def __init__(self, slide_interval=5, window_length=15):
+    def __init__(self):#, slide_interval=5, window_length=15):
         self.sc = SparkContext(appName='SparkStream', master='spark://ec2-54-84-42-80.compute-1.amazonaws.com:7077')
-        self.ssc = StreamingContext(self.sc, slide_interval)
-        self.slide_interval = slide_interval
-        self.window_length = window_length
+        self.ssc = StreamingContext(self.sc)#, slide_interval)
+        #self.slide_interval = slide_interval
+        #self.window_length = window_length
 
     def start_stream(self):
         self.ssc.start()
         self.ssc.awaitTermination()
 
     def consume_spreads(self, spread_topics):
+    
         self.kvs = KafkaUtils.createDirectStream(self.ssc, spread_topics,
                                                  {'metadata.broker.list': ','.join(KAFKA_NODES)})
         # messages come in [timestamp, bid, ask] format
-        lines = self.kvs.map(lambda v: json.loads(v[1])).cache()
-        print(lines)
+        parsed = self.kvs.map(lambda v: json.loads(v[1])).cache()
         #parsed = self.kvs.window(self.window_length, self.slide_interval).map(lambda v: json.loads(v[1])).cache()
 
         
         #parsed.pprint()
 
-        #parsed.foreachRDD(lambda rdd: rdd.foreachPartition(print_partition))
+        parsed.foreachRDD(lambda rdd: rdd.foreachPartition(print_partition))
