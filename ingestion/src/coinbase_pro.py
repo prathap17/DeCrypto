@@ -39,7 +39,7 @@ class CoinbasePro(cbpro.WebsocketClient):
                     asset_pair
                 ]
             message = json.dumps(data)
-            #print(message)
+            
 
                 # feed to kafka
             topic = 'Coinbase'
