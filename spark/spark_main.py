@@ -1,4 +1,3 @@
-from streaming import SparkStreamConsumer
 import json
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
@@ -10,22 +9,24 @@ KAFKA_NODES = ['ec2-54-84-42-80.compute-1.amazonaws.com:9092', 'ec2-18-211-13-85
 
 
 if __name__ == '__main__':
-    # Kraken asset pairs for BTC, ETH, and LTC to USD prices
-    
+    sc = SparkContext(appName='SparkStream', 
+                      master='spark://ec2-54-84-42-80.compute-1.amazonaws.com:7077')
+    sc.setLogLevel("ERROR")
 
-    #consumer = SparkStreamConsumer()
-    #consumer.consume_spreads(['Coinbase'])
-    #consumer.start_stream()
-    sc = SparkContext(appName='SparkStream', master='spark://ec2-54-84-42-80.compute-1.amazonaws.com:7077')
-    ssc = StreamingContext(sc)
+
+    ssc = StreamingContext(sc, 1)
     kvs = KafkaUtils.createDirectStream(ssc, ['Coinbase'],
                                                  {'metadata.broker.list': ','.join(KAFKA_NODES)})
         # messages come in [timestamp, bid, ask] format
     parsed = kvs.map(lambda v: json.loads(v[1]))
         
 
-        
+    print("The data is")    
     parsed.pprint()
+
+    ssc.start()
+    ssc.awaitTermination()
+
 
     
 
