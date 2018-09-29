@@ -5,6 +5,7 @@ import cbpro
 from confluent_kafka import Producer
 from config.config import KAFKA_NODES
 
+
 #print(KAFKA_NODES)
 
 
@@ -85,3 +86,5 @@ class CoinbasePro(cbpro.WebsocketClient):
         else:
             sub_params = {'type': 'subscribe', 'product_ids': self.products}
             self.ws.send(json.dumps(sub_params))
+        
+    
