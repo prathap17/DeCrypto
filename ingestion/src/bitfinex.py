@@ -15,6 +15,7 @@ class BitfinexProducer(object):
         self.channels = channels
         self.stop = False
         self.message_count = 0
+        self.topic = topic
         self.ws = None
         self.thread = None
         self.producer = KafkaProducer(bootstrap_servers=','.join(KAFKA_NODES),
