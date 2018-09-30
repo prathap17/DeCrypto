@@ -4,7 +4,6 @@ import os
 import sys
 import dateutil.parser
 import json
-from websocket import create_connection, WebSocketConnectionClosedException
 import cbpro 
 from confluent_kafka import Producer
 from config.config import KAFKA_NODES
@@ -26,7 +25,7 @@ class Cex():
     def produce(self):
         
         def delivery_report(err, k_msg):
-            print('hi')
+            
             """ Called once for each message produced to indicate delivery result.
                 Triggered by poll() or flush(). """
             if err is not None:
