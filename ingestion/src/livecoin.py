@@ -45,6 +45,7 @@ class LiveCoin():
 
                 # feed to kafka
             topic = 'Livecoin'
+            #print(message)
             
             self.producer.poll(0)
             self.producer.produce(
