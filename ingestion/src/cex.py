@@ -39,7 +39,7 @@ class Cex():
             
             self.data['product'] = self.products 
             data = [
-                    self.data['timestamp'], self.data['bids'], self.data['asks'], self.products,
+                    self.data['timestamp'], self.data['bids'][0][0], self.data['asks'][0][0], self.products,
                     "Cex"
     
                 ]
