@@ -35,9 +35,10 @@ class CoinbasePro(cbpro.WebsocketClient):
             
             asset_pair = msg['product_id']
             timestamp = dateutil.parser.parse(msg['time']).timestamp()
+            #print(msg)
             data = [
                     timestamp, msg['best_bid'], msg['best_ask'], asset_pair,
-                    asset_pair
+                    "Coinbase"
                 ]
             message = json.dumps(data)
             
