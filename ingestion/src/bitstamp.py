@@ -13,7 +13,7 @@ import ccxt
 
 # return up to ten bidasks on each side of the order book stack
 
-class Bitstamp():
+class BitStamp():
     def __init__(self, products, data):
         self.limit=100
         self.products=products
@@ -25,6 +25,7 @@ class Bitstamp():
     def produce(self):
         
         def delivery_report(err, k_msg):
+            
             """ Called once for each message produced to indicate delivery result.
                 Triggered by poll() or flush(). """
             if err is not None:
@@ -40,6 +41,7 @@ class Bitstamp():
 
             message = json.dumps(self.data)
 
+            #print(type(message))
                 # feed to kafka
             topic = 'Bitstamp'
             self.producer.poll(0)
@@ -48,6 +50,3 @@ class Bitstamp():
                     message.encode('utf-8'),
                     key=self.products,
                     callback=delivery_report)
-        
-        else:
-            print("Time stamp in data is not found")

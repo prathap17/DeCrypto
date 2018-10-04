@@ -38,10 +38,16 @@ class Cex():
         if 'timestamp' in self.data:  # timestamp
             
             self.data['product'] = self.products 
+            data = [
+                    self.data['timestamp'], self.data['bids'], self.data['asks'], self.products,
+                    "Cex"
+    
+                ]
+            message = json.dumps(data)
 
-            message = json.dumps(self.data)
-            
+            #message = json.dumps(self.data)
 
+            #print(type(message))
                 # feed to kafka
             topic = 'Cex'
             self.producer.poll(0)
