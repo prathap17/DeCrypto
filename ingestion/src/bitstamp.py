@@ -46,7 +46,7 @@ class BitStamp():
 
             message = json.dumps(data)
 
-            print(message)
+
 
             #print(type(message))
                 # feed to kafka
