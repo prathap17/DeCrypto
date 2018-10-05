@@ -16,7 +16,7 @@ def start_cex_producer():
     products =["BTC/USD", "ETH/USD", "BCH/USD"]  
     while True:
         for product in products:
-            data = Cex( product, cex().fetch_order_book(product, 10))
+            data = Cex( product, cex().fetch_order_book(product))
             data.produce()
 
 
@@ -24,7 +24,7 @@ def start_livecoin_producer():
     products =["BTC/USD"]  
     
     for product in products:
-        data = LiveCoin( product, livecoin().fetch_order_book(product, 10))
+        data = LiveCoin( product, livecoin().fetch_order_book(product))
         data.produce()
 
 def start_bitstamp_producer():
@@ -32,5 +32,5 @@ def start_bitstamp_producer():
     
     while True:
         for product in products:
-            data = BitStamp( product, bitstamp().fetch_order_book(product, 10))
+            data = BitStamp( product, bitstamp().fetch_order_book(product))
             data.produce()

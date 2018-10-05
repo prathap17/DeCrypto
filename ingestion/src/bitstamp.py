@@ -38,8 +38,15 @@ class BitStamp():
         if 'timestamp' in self.data:  # timestamp
             
             self.data['product'] = self.products 
+            data = [
+                    self.data['timestamp'], self.data['bids'][0][0], self.data['asks'][0][0], self.products,
+                    "Bitstamp", len(self.data['bids']), len(self.data['asks'])
+    
+                ] 
 
-            message = json.dumps(self.data)
+            message = json.dumps(data)
+
+            print(message)
 
             #print(type(message))
                 # feed to kafka

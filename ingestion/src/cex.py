@@ -40,14 +40,12 @@ class Cex():
             self.data['product'] = self.products 
             data = [
                     self.data['timestamp'], self.data['bids'][0][0], self.data['asks'][0][0], self.products,
-                    "Cex"
+                    "Cex", len(self.data['bids']), len(self.data['asks'])
     
                 ]
             message = json.dumps(data)
 
-            #message = json.dumps(self.data)
-
-            #print(type(message))
+            print(message)
                 # feed to kafka
             topic = 'Cex'
             self.producer.poll(0)
