@@ -44,6 +44,7 @@ class SparkStreamConsumer:
         print("the data is")
 
         parsed.count().pprint()
+        #parsed.pprint()
 
         parsed.foreachRDD(lambda x : processPartition(x,'trading','hft'))
 
