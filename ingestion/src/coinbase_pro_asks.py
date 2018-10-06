@@ -1,28 +1,28 @@
 import dateutil.parser
 import json
 from websocket import create_connection, WebSocketConnectionClosedException
-import cbpro 
+import cbpro
 from confluent_kafka import Producer
 from config.config import KAFKA_NODES
+from datetime import datetime
 
 
-#print(KAFKA_NODES)
-
-
-class CoinbasePro(cbpro.WebsocketClient):
+class CoinbaseProAsks(cbpro.WebsocketClient):
     def on_open(self):
         self.url = "wss://ws-feed.pro.coinbase.com/"  # websocket url for the coinbasepro
         self.products = ["BTC-USD", "ETH-USD", "LTC-USD",
                          "BCH-USD"]  # coinbase supports four coins
         self.type = 'ticker'
-        self.producer = Producer({'bootstrap.servers': ','.join(KAFKA_NODES), 'default.topic.config': { 'request.required.acks': 'all' }})
+        self.producer = Producer({
+            'bootstrap.servers': ','.join(KAFKA_NODES),
+            'default.topic.config': {
+                'request.required.acks': 'all'
+            }
+        })
         print('Established Socket Connection')
-        
 
     def on_message(self, msg):
-        
         def delivery_report(err, k_msg):
-            
             """ Called once for each message produced to indicate delivery result.
                 Triggered by poll() or flush(). """
             if err is not None:
@@ -32,25 +32,28 @@ class CoinbasePro(cbpro.WebsocketClient):
                     k_msg.topic(), k_msg.partition(), msg['product_id'])))
 
         if 'time' in msg:  # timestamp
-            
-            asset_pair = msg['product_id']
-            timestamp = dateutil.parser.parse(msg['time']).timestamp()
-            #print(msg)
-            data = [
-                    timestamp, msg['best_bid'], msg['best_ask'], asset_pair,
-                    "Coinbase", 1, 1
-                ]
-            message = json.dumps(data)
-            
 
-                # feed to kafka
-            topic = 'Coinbase'
+            asset_pair = msg['product_id']
+
+            data = {
+                'asks': (msg['best_ask']),
+                'len_asks': 1,
+                'product': asset_pair,
+                'time': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S+0000")
+            }
+
+            data['market'] = "Coinbase"
+
+            message = json.dumps(data)
+
+            # feed to kafka
+            topic = 'test'
             self.producer.poll(0)
             self.producer.produce(
-                    topic,
-                    message.encode('utf-8'),
-                    key=asset_pair,
-                    callback=delivery_report)
+                topic,
+                message.encode('utf-8'),
+                key=asset_pair,
+                callback=delivery_report)
 
     # Overwriting private method to allow for subscribing to the 'ticker' channel
     def _connect(self):
@@ -87,5 +90,3 @@ class CoinbasePro(cbpro.WebsocketClient):
         else:
             sub_params = {'type': 'subscribe', 'product_ids': self.products}
             self.ws.send(json.dumps(sub_params))
-        
-    
