@@ -11,7 +11,7 @@ SparkContext.setSystemProperty("spark.cassandra.connection.host",'ec2-54-85-200-
 
 
 
-def processPartition(partition, table, keyspace):
+def processPartition(partition, table, keyspace, sc):
     if partition.isEmpty():
         print('data is empty---------------------------------------------------')
         return
@@ -19,7 +19,7 @@ def processPartition(partition, table, keyspace):
         print("this is the partition ---------------------------",partition)
         spark = SparkSession(sc)
         hasattr(partition, "toDF")
-        df = partition.toDF(schema =['timestamp','best_bid','best_ask','product','exchange','number_bids','number_exchanges'])
+        df = partition.toDF(schema =['timestamp','best_bid','best_ask','product','exchange'])
         df.show()
         df.write.format("org.apache.spark.sql.cassandra").mode("append").options(table=table, keyspace=keyspace).save()
     
@@ -46,7 +46,7 @@ class SparkStreamConsumer:
         parsed.count().pprint()
         #parsed.pprint()
 
-        parsed.foreachRDD(lambda x : processPartition(x,'trades','hft'))
+        parsed.foreachRDD(lambda x : processPartition(x,'trades','hft', self.sc))
 
         
        
