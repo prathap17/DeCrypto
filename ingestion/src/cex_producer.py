@@ -4,17 +4,19 @@ import os
 import sys
 import dateutil.parser
 import json
+import cbpro
 from confluent_kafka import Producer
 from config.config import KAFKA_NODES
 root = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(root + '/python')
+import ccxt
 from datetime import datetime
 
 # return up to ten bidasks on each side of the order book stack
 
 
-class BitStampBids():
+class Cex():
     def __init__(self, products, data):
         self.limit = 100
         self.products = products
@@ -39,25 +41,27 @@ class BitStampBids():
 
         if 'timestamp' in self.data:  # timestamp
 
+            self.data['product'] = self.products
 
             data = {
                 'bids': (self.data['bids'][0][0]),
                 'len_bids': (abs(len(self.data['bids']))),
+                'asks': (self.data['asks'][0][0]),
+                'len_asks': (abs(len(self.data['asks']))),
                 'product': self.products.replace("/", "-"),
                 'time': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S+0000")
             }
 
-            data['market'] = "Bitstamp"
+            data['market'] = "Cex"
 
             message = json.dumps(data)
-            # print(message)
 
-            # print(type(message))
+            print(message)
             # feed to kafka
             topic = 'test'
             self.producer.poll(0)
             self.producer.produce(
                 topic,
                 message.encode('utf-8'),
-                key=self.products.replace('/', '-'),
+                key=self.products,
                 callback=delivery_report)

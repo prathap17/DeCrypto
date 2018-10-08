@@ -7,7 +7,7 @@ from config.config import KAFKA_NODES
 from datetime import datetime
 
 
-class CoinbaseProAsks(cbpro.WebsocketClient):
+class CoinbasePro(cbpro.WebsocketClient):
     def on_open(self):
         self.url = "wss://ws-feed.pro.coinbase.com/"  # websocket url for the coinbasepro
         self.products = ["BTC-USD", "ETH-USD", "LTC-USD",
@@ -36,6 +36,8 @@ class CoinbaseProAsks(cbpro.WebsocketClient):
             asset_pair = msg['product_id']
 
             data = {
+                'bids': (msg['best_bid']),
+                'len_bids': 1,
                 'asks': (msg['best_ask']),
                 'len_asks': 1,
                 'product': asset_pair,
