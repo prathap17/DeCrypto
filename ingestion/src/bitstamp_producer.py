@@ -39,7 +39,7 @@ class BitStamp():
 
         if 'timestamp' in self.data:  # timestamp
 
-
+            
             data = {
                 'bids': (self.data['bids'][0][0]),
                 'len_bids': (abs(len(self.data['bids']))),
@@ -50,12 +50,8 @@ class BitStamp():
             }
 
             data['market'] = "Bitstamp"
-
+            
             message = json.dumps(data)
-            # print(message)
-
-            # print(type(message))
-            # feed to kafka
             topic = 'test'
             self.producer.poll(0)
             self.producer.produce(

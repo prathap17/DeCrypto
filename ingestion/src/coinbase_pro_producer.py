@@ -9,9 +9,9 @@ from datetime import datetime
 
 class CoinbasePro(cbpro.WebsocketClient):
     def on_open(self):
-        self.url = "wss://ws-feed.pro.coinbase.com/"  # websocket url for the coinbasepro
+        self.url = "wss://ws-feed.pro.coinbase.com/"  
         self.products = ["BTC-USD", "ETH-USD", "LTC-USD",
-                         "BCH-USD"]  # coinbase supports four coins
+                         "BCH-USD" , 'ETH-BTC', 'LTC-BTC']  
         self.type = 'ticker'
         self.producer = Producer({
             'bootstrap.servers': ','.join(KAFKA_NODES),
@@ -47,8 +47,6 @@ class CoinbasePro(cbpro.WebsocketClient):
             data['market'] = "Coinbase"
 
             message = json.dumps(data)
-
-            # feed to kafka
             topic = 'test'
             self.producer.poll(0)
             self.producer.produce(

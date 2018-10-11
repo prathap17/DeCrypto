@@ -32,7 +32,7 @@ def start_cex_producer():
 
 
 def start_bitstamp_producer():
-    products = ["BTC/USD", "ETH/USD"]
+    products = ["ETH/BTC", "BTC/USD", "ETH/USD"]
 
     while True:
         for product in products:
