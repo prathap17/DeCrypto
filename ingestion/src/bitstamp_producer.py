@@ -1,17 +1,14 @@
-# -*- coding: utf-8 -*-
-
-import os
-import sys
 import dateutil.parser
 import json
 from confluent_kafka import Producer
 from config.config import KAFKA_NODES
-root = os.path.dirname(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.append(root + '/python')
 from datetime import datetime
 
-# return up to ten bidasks on each side of the order book stack
+""" 
+    The Bitstamp class fetches data from Bitsamp api and formats the data.
+    And push data to kafka topic
+
+"""
 
 
 class BitStamp():
@@ -28,18 +25,20 @@ class BitStamp():
         print('Established Socket Connection')
 
     def produce(self):
+        
         def delivery_report(err, k_msg):
-            """ Called once for each message produced to indicate delivery result.
-                Triggered by poll() or flush(). """
+             
+            # triggers delivery report  by poll() or flush()
+            
             if err is not None:
                 print(('Message delivery failed: {}'.format(err)))
             else:
                 print(('Message delivered to {} [{}] - {}'.format(
                     k_msg.topic(), k_msg.partition(), self.products)))
 
-        if 'timestamp' in self.data:  # timestamp
+        if 'timestamp' in self.data:  
 
-            
+             # data formatting
             data = {
                 'bids': (self.data['bids'][0][0]),
                 'len_bids': (abs(len(self.data['bids']))),
@@ -50,8 +49,10 @@ class BitStamp():
             }
 
             data['market'] = "Bitstamp"
-            
             message = json.dumps(data)
+            
+            # push t0 kafka topic
+
             topic = 'bids'
             self.producer.poll(0)
             self.producer.produce(

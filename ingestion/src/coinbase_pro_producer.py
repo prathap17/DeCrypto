@@ -6,6 +6,11 @@ from confluent_kafka import Producer
 from config.config import KAFKA_NODES
 from datetime import datetime
 
+""" 
+    The CoinbasePro class fetches data from CoinbasePro Weboscket.
+    It formats the data and push data to kafka topic
+
+"""
 
 class CoinbasePro(cbpro.WebsocketClient):
     def on_open(self):
@@ -23,8 +28,8 @@ class CoinbasePro(cbpro.WebsocketClient):
 
     def on_message(self, msg):
         def delivery_report(err, k_msg):
-            """ Called once for each message produced to indicate delivery result.
-                Triggered by poll() or flush(). """
+            # triggers delivery report  by poll() or flush()
+
             if err is not None:
                 print(('Message delivery failed: {}'.format(err)))
             else:
@@ -45,8 +50,9 @@ class CoinbasePro(cbpro.WebsocketClient):
             }
 
             data['market'] = "Coinbase"
-
             message = json.dumps(data)
+
+            # push to kafka topic
             topic = 'asks'
             self.producer.poll(0)
             self.producer.produce(

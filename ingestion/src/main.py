@@ -11,7 +11,10 @@ from ingestion.src.okcoin_bids import OkCoinBids
 
 from ingestion.src.bitstamp_producer import BitStamp
 
-
+""" 
+   Created functions to start the multiple producers
+   like okcoin, coinbase, bitstamp and cex 
+"""
 
 def start_okcoin_producer():
     wsClient = OkCoinBids()

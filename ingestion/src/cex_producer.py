@@ -11,7 +11,12 @@ root = os.path.dirname(
 sys.path.append(root + '/python')
 from datetime import datetime
 
-# return up to ten bidasks on each side of the order book stack
+""" 
+    The Bitstamp class from Bitsamp api and formats the data.
+    And push data to kafka topic
+
+"""
+
 
 
 class Cex():
@@ -29,13 +34,15 @@ class Cex():
 
     def produce(self):
         def delivery_report(err, k_msg):
+            # triggers delivery report  by poll() or flush()
+            
             if err is not None:
                 print(('Message delivery failed: {}'.format(err)))
             else:
                 print(('Message delivered to {} [{}] - {}'.format(
                     k_msg.topic(), k_msg.partition(), self.products)))
 
-        if 'timestamp' in self.data:  # timestamp
+        if 'timestamp' in self.data:  
 
             self.data['product'] = self.products
 
@@ -49,9 +56,9 @@ class Cex():
             }
 
             data['market'] = "Cex"
-
             message = json.dumps(data)
 
+            # push t0 kafka topic
             topic = 'bids'
             self.producer.poll(0)
             self.producer.produce(

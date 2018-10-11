@@ -7,9 +7,14 @@ from pyspark.sql import SparkSession, SQLContext
 import redis
 from pyspark import SparkConf, SparkContext
 from pyspark import SparkContext
+from config.config import KAFKA_NODES
 SparkContext.setSystemProperty("spark.cassandra.connection.host",
                                'ec2-54-85-200-216.compute-1.amazonaws.com')
 
+"""
+    processParition will compute the spread among different exchanges
+    and returns the best exchange at the discrete timestamp
+"""
 
 def processPartition(partition, table, keyspace, sc):
     if partition.isEmpty():
@@ -29,7 +34,8 @@ def processPartition(partition, table, keyspace, sc):
                     return accum
                 elif ('asks' in list(x.keys())):
                     return x
-
+        
+        # aggregating time and coin for effective transformation
         partition.map(lambda x: ((x['time'] + x['product']), x)).filter(
             lambda x: x is not None).filter(lambda x: x != "").reduceByKey(f)
 
@@ -59,7 +65,7 @@ class SparkConsumer:
             self.ssc, spread_topics,
             {'metadata.broker.list': ','.join(KAFKA_NODES)})
 
-        parsed_test = kafka_data.map(lambda v: (json.loads(v[1])))
+        raw_data = kafka_data.map(lambda v: (json.loads(v[1])))
 
-        parsed_test.foreachRDD(
+        raw_data.foreachRDD(
             lambda x: processPartition(x, 'final_trades', 'hft', self.sc))
