@@ -15,4 +15,4 @@ Data from different  APIs from the markets are ingested to several Kafka produce
 
 Spark Streaming consumes all queues from Kafka and calculates the best exchange for trading.
 
-![screen shot 2018-10-06 at 9 48 39 am](https://user-images.githubusercontent.com/31057560/46576850-3de3ed80-c9a3-11e8-9694-b6a48116d2f6.png)
+<img width="1260" alt="screen shot 2018-10-11 at 2 46 00 pm" src="https://user-images.githubusercontent.com/31057560/46826660-8b29db80-cd64-11e8-951f-34b992d66fc4.png">
