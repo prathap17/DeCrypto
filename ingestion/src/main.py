@@ -27,7 +27,8 @@ def start_coinbase_producer():
 
 
 def start_cex_producer():
-    products = ["BTC/USD", "ETH/USD", "BCH/USD"]
+    products = ["BTC/USD", "ETH/USD", "BCH/USD",
+                "ETH/BTC", "BCH/BTC"]
     while True:
         for product in products:
             data = Cex(product, cex().fetch_order_book(product))
@@ -35,7 +36,8 @@ def start_cex_producer():
 
 
 def start_bitstamp_producer():
-    products = ["ETH/BTC", "BTC/USD", "ETH/USD"]
+    products = ["BTC/USD", "ETH/USD", "BCH/USD",
+                "LTC/USD", "LTC/BTC", "ETH/BTC", "BCH/BTC"]
 
     while True:
         for product in products:
