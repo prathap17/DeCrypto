@@ -2,5 +2,5 @@ cbpro # The Python client for the Coinbase Pro API (formerly known as the GDAX)
 confluent_kafka
 ccxt
 websocket-client-py3
-krakenex
-btfxwss
+flask
+cassandra-driver
