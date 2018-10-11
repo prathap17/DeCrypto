@@ -6,6 +6,8 @@ from cassandra.query import dict_factory
 from cassandra import ReadTimeout
 import pandas as pd
 import datetime
+import logging
+log = logging.getLogger('module')
 
 """
    FetchData connects to the cassandra database and gets the 
@@ -21,7 +23,7 @@ class FetchData():
         time_old = datetime.datetime.utcnow() - timedelta(
             hours=0, minutes=0, seconds=10)
         self.time_old = time_old.strftime("%Y-%m-%dT%H:%M:%S+0000")
-        self.log = ''
+        self.log = logging.getLogger('module.FetchData')
 
     def start_connection(self):
         cluster = Cluster([self.cassandra_host_name])
@@ -47,7 +49,7 @@ class FetchData():
             if (len(df.index) == 0):
                 return None
         except ReadTimeout:
-            log.exception("Query timed out:")
+            self.log.exception("Query timed out:")
         return df
 
     def get_data_bids(self, prepared_query, session):
@@ -58,5 +60,5 @@ class FetchData():
             if (len(df.index) == 0):
                 return None
         except ReadTimeout:
-            log.exception("Query timed out:")
+            self.log.exception("Query timed out:")
         return df
