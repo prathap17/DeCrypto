@@ -37,11 +37,11 @@ def processPartition(partition, table, keyspace,sc):
         df.write.format("org.apache.spark.sql.cassandra").mode("append").options(table=table, keyspace=keyspace).save()
 
 
-class SparkStreamConsumer:
+class SparkConsumer:
     def __init__(self):
         self.sc = SparkContext(appName='Stream', master='spark://ec2-18-235-136-124.compute-1.amazonaws.com:7077')
         self.sc.setLogLevel("WARN")
-        self.ssc = StreamingContext(self.sc, 10)
+        self.ssc = StreamingContext(self.sc, 1)
 
     def start_stream(self):
         self.ssc.start()
@@ -50,8 +50,6 @@ class SparkStreamConsumer:
     def consume(self, spread_topics):
         kafka_data = KafkaUtils.createDirectStream(self.ssc, spread_topics,
                                                  {'metadata.broker.list': ','.join(KAFKA_NODES)})
-
-        parsed = kafka_data.map(lambda v: (json.loads(v[1])))
 
         parsed_test = kafka_data.map(lambda v: (json.loads(v[1])))
 

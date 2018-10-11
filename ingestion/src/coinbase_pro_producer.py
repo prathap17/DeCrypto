@@ -31,7 +31,7 @@ class CoinbasePro(cbpro.WebsocketClient):
                 print(('Message delivered to {} [{}] - {}'.format(
                     k_msg.topic(), k_msg.partition(), msg['product_id'])))
 
-        if 'time' in msg:  # timestamp
+        if 'time' in msg:  
 
             asset_pair = msg['product_id']
 
@@ -47,7 +47,7 @@ class CoinbasePro(cbpro.WebsocketClient):
             data['market'] = "Coinbase"
 
             message = json.dumps(data)
-            topic = 'test'
+            topic = 'asks'
             self.producer.poll(0)
             self.producer.produce(
                 topic,
@@ -55,7 +55,7 @@ class CoinbasePro(cbpro.WebsocketClient):
                 key=asset_pair,
                 callback=delivery_report)
 
-    # Overwriting private method to allow for subscribing to the 'ticker' channel
+    
     def _connect(self):
         if self.products is None:
             self.products = ["BTC-USD"]

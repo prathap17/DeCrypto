@@ -4,13 +4,11 @@ import os
 import sys
 import dateutil.parser
 import json
-import cbpro
 from confluent_kafka import Producer
 from config.config import KAFKA_NODES
 root = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(root + '/python')
-import ccxt
 from datetime import datetime
 
 # return up to ten bidasks on each side of the order book stack
@@ -31,8 +29,6 @@ class Cex():
 
     def produce(self):
         def delivery_report(err, k_msg):
-            """ Called once for each message produced to indicate delivery result.
-                Triggered by poll() or flush(). """
             if err is not None:
                 print(('Message delivery failed: {}'.format(err)))
             else:
@@ -56,9 +52,7 @@ class Cex():
 
             message = json.dumps(data)
 
-            print(message)
-            # feed to kafka
-            topic = 'test'
+            topic = 'bids'
             self.producer.poll(0)
             self.producer.produce(
                 topic,

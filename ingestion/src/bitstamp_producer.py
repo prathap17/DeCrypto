@@ -52,7 +52,7 @@ class BitStamp():
             data['market'] = "Bitstamp"
             
             message = json.dumps(data)
-            topic = 'test'
+            topic = 'bids'
             self.producer.poll(0)
             self.producer.produce(
                 topic,
