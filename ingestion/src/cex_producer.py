@@ -12,7 +12,7 @@ sys.path.append(root + '/python')
 from datetime import datetime
 
 """ 
-    The Bitstamp class from Bitsamp api and formats the data.
+    The Cex class fetches data from Cex api and formats the data.
     And push data to kafka topic
 
 """
@@ -35,7 +35,7 @@ class Cex():
     def produce(self):
         def delivery_report(err, k_msg):
             # triggers delivery report  by poll() or flush()
-            
+
             if err is not None:
                 print(('Message delivery failed: {}'.format(err)))
             else:
@@ -58,7 +58,7 @@ class Cex():
             data['market'] = "Cex"
             message = json.dumps(data)
 
-            # push t0 kafka topic
+            # push to kafka topic
             topic = 'bids'
             self.producer.poll(0)
             self.producer.produce(
