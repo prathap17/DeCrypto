@@ -31,18 +31,14 @@ class FetchData():
         session.row_factory = dict_factory
         return session
 
-    def prepare_asks_query(self, session):
-        query = "SELECT MAX(asks),product,market,len_asks FROM final_trades_test \
-        WHERE time > self.time_old AND time < self.time_now group by product;"
+    def prepare_query(self, session):
+        query = "SELECT * FROM final_trades_test \
+        WHERE time > ? AND time < ? AND product = ? ALLOW FILTERING"
         return session.prepare(query)
 
-    def prepare_bids_query(self, session):
-        query = "SELECT MAX(bids),product,market,len_bids FROM final_trades_test \
-        WHERE time > self.time_old AND time < self.time_now group by product;"
-        return session.prepare(query)
-
-    def get_data_asks(self, prepared_query, session):
-        result_set = session.execute_async(prepared_query)
+    
+    def get_data(self, prepared_query, session, product):
+        result_set = session.execute_async(prepared_query, parameters =[self.time_old, self.time_now, product])
         try:
             rows = result_set.result()
             df = pd.DataFrame(list(rows))
@@ -52,13 +48,4 @@ class FetchData():
             self.log.exception("Query timed out:")
         return df
 
-    def get_data_bids(self, prepared_query, session):
-        result_set = session.execute_async(prepared_query)
-        try:
-            rows = result_set.result()
-            df = pd.DataFrame(list(rows))
-            if (len(df.index) == 0):
-                return None
-        except ReadTimeout:
-            self.log.exception("Query timed out:")
-        return df
+    
