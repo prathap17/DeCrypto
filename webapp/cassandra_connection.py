@@ -21,7 +21,7 @@ class FetchData():
         self.time_now = datetime.datetime.utcnow().strftime(
             "%Y-%m-%dT%H:%M:%S+0000")
         time_old = datetime.datetime.utcnow() - timedelta(
-            hours=0, minutes=0, seconds=10)
+            hours=0, minutes=0, seconds=50)
         self.time_old = time_old.strftime("%Y-%m-%dT%H:%M:%S+0000")
         self.log = logging.getLogger('module.FetchData')
 
@@ -38,7 +38,8 @@ class FetchData():
 
     
     def get_data(self, prepared_query, session, product):
-        result_set = session.execute_async(prepared_query, parameters =[self.time_old, self.time_now, product])
+        result_set = session.execute_async(prepared_query, parameters \
+        =[self.time_old, self.time_now, product]) #['2018-10-11T21:15:29+0000', '2018-10-11T21:15:42+0000', product])#
         try:
             rows = result_set.result()
             df = pd.DataFrame(list(rows))

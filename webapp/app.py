@@ -5,7 +5,7 @@ from dash.dependencies import Input, Output
 from cassandra_connection import FetchData
 import plotly.graph_objs as go
 
-Borough = ('BTC-USD','ETH-USD','LTC-USD','BCH-USD','ETH-BTC', "LTC-BTC", "BCH-USD")
+cryptos = ('BTC-USD','ETH-USD','LTC-USD','BCH-USD','ETH-BTC', "LTC-BTC", "BCH-USD")
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -15,7 +15,7 @@ app.layout = html.Div([
     html.H1(children='DeCrypto'),
     dcc.Graph(id='graph'),
     dcc.Dropdown(id='currency',
-                 options=[{'label': p, 'value': p} for p in Borough],
+                 options=[{'label': p, 'value': p} for p in cryptos],
                  multi=False, value=''
                  ),
     

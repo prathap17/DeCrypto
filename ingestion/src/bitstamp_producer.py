@@ -53,7 +53,7 @@ class BitStamp():
             
             # push t0 kafka topic
 
-            topic = 'bids'
+            topic = 'asks'
             self.producer.poll(0)
             self.producer.produce(
                 topic,
