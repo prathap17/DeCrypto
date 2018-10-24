@@ -54,7 +54,7 @@ class SparkConsumer:
             appName='Stream',
             master='spark://ec2-18-235-136-124.compute-1.amazonaws.com:7077')
         self.sc.setLogLevel("WARN")
-        self.ssc = StreamingContext(self.sc, 1)
+        self.ssc = StreamingContext(self.sc, 10)
 
     def start_stream(self):
         self.ssc.start()

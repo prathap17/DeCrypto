@@ -1,4 +1,3 @@
-import sys
 from datetime import datetime
 from confluent_kafka import Producer
 import json
@@ -78,28 +77,47 @@ class OkCoinBids(object):
             if msg["channel"] == self.channel and self.snapshot == 0:
                 self.snapshot = 1
                 return
-
+            
             bids = msg["data"]["bids"]
+            asks = msg["data"]["asks"]
+
+            fmt_msg = {
+                    'market': "okcoin",
+                    'time':
+                    datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S+0000"),
+                    "product":'BTC-USD'
+                }
 
             if not bids:
-                fmt_msg = {
-                    'best_bid': str(0),
-                    'number_bids': str(len(bids)),
-                    'market': "okcoin",
-                    'time':
-                    datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S+0000")
-                }
+                fmt_msg['bids'] = str(0)
+                fmt_msg['len_bids'] = str(len(bids))
+                
 
             else:
-                fmt_msg = {
-                    'best_bid': str(bids[0][0]),
-                    'number_bids': str(len(bids)),
-                    'market': "okcoin",
-                    'time':
-                    datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S+0000")
-                }
+                fmt_msg['bids'] = str(bids[0][0])
+                fmt_msg['len_bids'] = str(len(bids))
 
-            print(fmt_msg)
+            if not asks:
+                fmt_msg['asks'] = str(0)
+                fmt_msg['len_asks'] = str(len(asks))
+                
+            else:
+                fmt_msg['asks'] = str(asks[0][0])
+                fmt_msg['len_asks'] = str(len(asks))
+                
+
+
+            
+            message = json.dumps(fmt_msg)
+            # push t0 kafka topic
+
+            topic = 'asks'
+            self.producer.poll(0)
+            self.producer.produce(
+                topic,
+                message.encode('utf-8'),
+                key=self.products,
+                )
             self.probCount = 0
         except Exception as e:
             self.on_error(e)
@@ -110,3 +128,8 @@ class OkCoinBids(object):
         if self.probCount > 10:
             self.close()
             exit(-1)
+
+
+
+
+           
